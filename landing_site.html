@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Noctus — AI Agents for Every Business</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:auto}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#000;color:#fff;overflow-x:hidden;line-height:1.5}
+::-webkit-scrollbar{width:0}
+
+/* SCROLL BAR */
+#spb{position:fixed;top:0;left:0;height:1px;background:rgba(255,255,255,0.2);z-index:999;width:0%;pointer-events:none}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:56px;background:rgba(0,0,0,0);border-bottom:1px solid rgba(255,255,255,0);transition:background 0.4s,border-color 0.4s}
+nav.scrolled{background:rgba(0,0,0,0.9);backdrop-filter:blur(20px);border-bottom-color:rgba(255,255,255,0.05)}
+.nl{display:flex;align-items:center;gap:9px}
+.nl img{width:22px;height:22px;object-fit:contain;opacity:0;transition:opacity 0.3s}
+nav.scrolled .nl img{opacity:1}
+.nl span{font-size:12px;font-weight:800;letter-spacing:0.1em}
+.nlinks{display:flex;align-items:center;gap:28px;opacity:0;pointer-events:none;transition:opacity 0.5s ease}
+.nlinks a{font-size:12px;color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.15s}
+.nlinks a:hover{color:#fff}
+.ncta{font-size:11px;font-weight:700;padding:7px 18px;border-radius:20px;background:#fff;color:#000;border:none;cursor:pointer;opacity:0;pointer-events:none;transition:background 0.15s,transform 0.1s,opacity 0.5s ease}
+.ncta:hover{background:#e8e8e8;transform:translateY(-1px)}
+nav.past-hero .nlinks{opacity:1;pointer-events:auto}
+nav.past-hero .ncta{opacity:1;pointer-events:auto}
+
+/* ============ HERO — logo splash ============ */
+.hero{position:relative;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:100px 24px 80px}
+#hero-canvas{position:absolute;inset:0;z-index:0}
+.hero-c{position:relative;z-index:2;max-width:720px}
+.hero-logo{display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:56px;opacity:0;animation:fu 0.8s cubic-bezier(0.2,0.8,0.3,1) 0.2s forwards}
+.hero-logo img{width:108px;height:108px;object-fit:contain}
+.hero-logo-name{font-size:11px;font-weight:800;letter-spacing:0.22em;color:rgba(255,255,255,0.32)}
+.hero h1{font-size:clamp(44px,7vw,88px);font-weight:800;letter-spacing:-0.055em;line-height:0.97;margin-bottom:22px}
+.hl{display:block;opacity:0}
+.hl:nth-child(1){animation:fu 0.7s cubic-bezier(0.2,0.8,0.3,1) 0.6s forwards}
+.hl:nth-child(2){animation:fu 0.7s cubic-bezier(0.2,0.8,0.3,1) 0.78s forwards;color:rgba(255,255,255,0.25)}
+.hl:nth-child(3){animation:fu 0.7s cubic-bezier(0.2,0.8,0.3,1) 0.96s forwards}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.38);line-height:1.7;margin-bottom:36px;max-width:460px;margin-left:auto;margin-right:auto;opacity:0;animation:fu 0.6s ease 1.2s forwards}
+.hero-form{display:flex;gap:8px;justify-content:center;max-width:390px;margin:0 auto 18px;opacity:0;animation:fu 0.6s ease 1.38s forwards}
+.hero-form input{flex:1;padding:12px 15px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;font-size:13px;font-family:inherit;outline:none;transition:border-color 0.15s}
+.hero-form input::placeholder{color:rgba(255,255,255,0.2)}
+.hero-form input:focus{border-color:rgba(255,255,255,0.25)}
+.hero-form button{padding:12px 20px;border-radius:10px;background:#fff;color:#000;border:none;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background 0.15s,transform 0.1s}
+.hero-form button:hover{background:#e8e8e8;transform:translateY(-1px)}
+.hero-soc{font-size:11px;color:rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center;gap:9px;opacity:0;animation:fu 0.6s ease 1.52s forwards}
+.havs{display:flex}
+.havs span{width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:rgba(255,255,255,0.3);margin-left:-5px}
+.havs span:first-child{margin-left:0}
+.scroll-ind{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fu 0.5s ease 2s forwards}
+.scroll-ind span{font-size:9px;color:rgba(255,255,255,0.16);letter-spacing:0.14em;text-transform:uppercase}
+.scroll-ind-l{width:1px;height:42px;background:linear-gradient(to bottom,rgba(255,255,255,0.22),transparent);animation:spulse 2.2s ease infinite}
+@keyframes spulse{0%{transform:scaleY(0);transform-origin:top;opacity:0}50%{transform:scaleY(1);opacity:1}100%{transform:scaleY(0);transform-origin:bottom;opacity:0}}
+
+/* ============ PAIN — sticky line reveal ============ */
+#pain-wrap{position:relative}
+.pain-sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pain-block{max-width:820px;padding:0 32px;text-align:center}
+.pain-line{
+  display:block;font-size:clamp(26px,4.5vw,56px);font-weight:800;letter-spacing:-0.045em;line-height:1.15;
+  opacity:0;transform:translateY(12px);filter:blur(6px);
+  transition:opacity 0.5s cubic-bezier(0.2,0.8,0.3,1),transform 0.5s cubic-bezier(0.2,0.8,0.3,1),filter 0.5s ease;
+  color:rgba(255,255,255,0.85);margin-bottom:0.12em;
+}
+.pain-line.lit{opacity:1;transform:translateY(0);filter:blur(0)}
+.pain-line.impact{font-size:clamp(32px,5.5vw,68px);color:#fff;margin-top:0.3em}
+.pain-line.impact.lit{animation:impactIn 0.7s cubic-bezier(0.2,0.8,0.3,1) both}
+@keyframes impactIn{0%{opacity:0;transform:translateY(14px);filter:blur(8px)}60%{filter:blur(0)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}
+
+/* ============ SECTION DIVIDER ============ */
+.tdiv{height:1px;background:linear-gradient(to right,transparent,#1a1a1a 20%,#1a1a1a 80%,transparent)}
+
+/* ============ NODE BUILDER — sticky ============ */
+#node-wrap{position:relative}
+.node-sticky{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;gap:0}
+.node-hed{font-size:clamp(13px,1.8vw,18px);font-weight:700;letter-spacing:-0.02em;color:rgba(255,255,255,0);text-align:center;margin-bottom:4px;transition:color 0.4s}
+.node-sub-lbl{font-size:11px;color:rgba(255,255,255,0);text-align:center;margin-bottom:18px;transition:color 0.4s}
+
+/* Node canvas wrapper — exact prototype style */
+#ncw{width:min(780px,93vw);background:#000;border:1px solid #1a1a1a;border-radius:10px;overflow:hidden;position:relative}
+.ntb{display:flex;align-items:center;gap:6px;padding:9px 14px;background:#050505;border-bottom:1px solid #1a1a1a}
+.ntd{width:9px;height:9px;border-radius:50%}
+.ntbt{font-size:9px;font-weight:700;color:#1e1e1e;margin-left:5px;letter-spacing:0.08em;text-transform:uppercase}
+#nlive{margin-left:auto;font-size:8px;font-weight:700;padding:2px 8px;border-radius:4px;background:rgba(76,217,122,0.06);color:rgba(76,217,122,0);letter-spacing:0.06em;text-transform:uppercase;display:flex;align-items:center;gap:4px;transition:color 0.5s}
+#nlive::before{content:'';width:5px;height:5px;border-radius:50%;background:#4cd97a;opacity:0;transition:opacity 0.5s;animation:pdot 2s infinite}
+
+/* The actual node canvas area */
+#nc{
+  position:relative;height:min(310px,44vh);
+  background-color:#000;
+  background-image:radial-gradient(circle,#1c1c1c 1px,transparent 1px);
+  background-size:22px 22px;
+  overflow:hidden;
+}
+/* Edge SVG — full overlay */
+#nc svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+
+/* Node boxes — exact prototype CSS */
+.n-box{position:absolute;width:130px;border-radius:8px;cursor:pointer;user-select:none;opacity:0;transform:scale(0.62);transform-origin:center;transition:box-shadow 0.15s}
+.n-box:hover{box-shadow:0 4px 16px rgba(0,0,0,0.5)}
+.n-trigger{background:#1a2840;border:1.5px solid #2860a8}
+.n-ai{background:#28163a;border:1.5px solid #7040b0}
+.n-action{background:#102820;border:1.5px solid #207050}
+.n-branch{background:#251c08;border:1.5px solid #806030}
+.n-head{padding:8px 10px}
+.n-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:5px}
+.n-label{font-size:11px;font-weight:600;color:#fff;line-height:1.3}
+.n-foot{padding:5px 10px;display:flex;justify-content:space-between;align-items:center}
+.n-test{font-size:9px;font-weight:700;border:none;border-radius:4px;padding:3px 7px;cursor:pointer;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.3)}
+
+/* Status bar */
+#nsbar{display:flex;align-items:center;gap:10px;padding:0 14px;height:44px;background:#050505;border-top:1px solid #1a1a1a;opacity:0;transform:translateY(14px);transition:opacity 0.5s,transform 0.5s}
+#nsdot{width:7px;height:7px;border-radius:50%;background:#4cd97a;animation:pdot 2s infinite;flex-shrink:0}
+#nstxt{font-size:11px;color:#4cd97a;font-weight:600}
+#nsdet{font-size:10px;color:#252525;margin-left:2px}
+#nsruns{margin-left:auto;text-align:right}
+#nsruns .rn{font-size:13px;font-weight:700;color:#444;letter-spacing:-0.03em}
+#nsruns .rl{font-size:9px;color:#222}
+
+/* label row names */
+.nc-lbl{position:absolute;font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0);transition:color 0.4s;pointer-events:none;white-space:nowrap;transform:translateX(-50%)}
+
+/* ============ QUICK CREATE — SCROLL ANIMATION ============ */
+#qc-wrap{position:relative;border-top:1px solid #1a1a1a}
+.qc-sticky{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;overflow:hidden;padding:0 24px}
+.qc-sec-hdr{text-align:center;max-width:600px}
+.qc-sec-hdr h2{font-size:clamp(22px,3.2vw,38px);font-weight:800;letter-spacing:-0.04em;line-height:1.1;margin-top:8px;text-wrap:balance}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#333;margin-bottom:12px}
+.sec-h2{font-size:clamp(26px,3.8vw,44px);font-weight:800;letter-spacing:-0.04em;line-height:1.08;text-wrap:balance}
+.sec-sub{font-size:14px;color:#555;margin-top:12px;line-height:1.7;max-width:420px}
+#qc-card{width:min(540px,92vw);background:#0a0a0a;border:1px solid #1a1a1a;border-radius:14px;overflow:hidden}
+#qc-tb-txt{font-size:9px;font-weight:700;color:#1e1e1e;margin-left:5px;letter-spacing:0.08em;text-transform:uppercase}
+#qc-live-badge{margin-left:auto;font-size:8px;font-weight:700;letter-spacing:0.06em;transition:color 0.5s;color:rgba(76,217,122,0)}
+#qc-body{position:relative;height:min(292px,40vh)}
+.qc-state{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:16px 18px;transition:opacity 0.28s ease}
+.qc-ta-box{background:#000;border:1px solid #1a1a1a;border-radius:9px;padding:11px 13px;font-size:12px;color:#888;line-height:1.6;min-height:58px;margin-bottom:10px}
+.qc-cursor{display:inline-block;width:1.5px;height:12px;background:#aaa;margin-left:1px;animation:blink 0.9s step-end infinite;vertical-align:text-bottom}
+@keyframes blink{50%{opacity:0}}
+.qc-chips-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.qc-chip{font-size:9px;padding:4px 10px;border-radius:20px;background:#111;border:1px solid #1a1a1a;color:#555;white-space:nowrap}
+.qc-act-row{display:flex;align-items:center;justify-content:space-between}
+.qc-gen-btn{padding:7px 16px;border-radius:8px;background:#111;border:1px solid #1a1a1a;color:#333;font-size:11px;font-weight:700;transition:background 0.4s,color 0.3s,border-color 0.3s}
+.qc-load-inner{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%}
+.qc-logo-loader{width:58px;height:58px;border-radius:14px;background:#0a0a0a;border:1px solid #1a1a1a;display:flex;align-items:center;justify-content:center}
+#qc-logo-spin{width:38px;height:38px;object-fit:contain;animation:logoPulse 1.6s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{opacity:0.35;transform:scale(0.88)}50%{opacity:1;transform:scale(1)}}
+.qc-load-bar-wrap{width:200px;height:2px;background:#111;border-radius:2px;overflow:hidden}
+#qc-load-bar{height:100%;background:rgba(255,255,255,0.7);border-radius:2px;width:0%}
+.qc-phases{display:flex;flex-direction:column;gap:7px;width:100%;max-width:240px}
+.qc-phase{font-size:11px;font-weight:600;color:#252525;transition:color 0.25s}
+.qc-phase .qp-dot{font-size:9px;margin-right:6px}
+.qc-node-sec{padding:14px 16px 16px}
+.qc-node-hd{font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#1e1e1e;margin-bottom:8px}
+#qc-nc{position:relative;height:132px;background:#000;background-image:radial-gradient(circle,#1c1c1c 1px,transparent 1px);background-size:20px 20px;border-radius:8px;overflow:hidden}
+#qc-nc svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.qc-steps-row{display:flex;align-items:center;gap:10px}
+.qcsr{font-size:9px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:#1c1c1c;transition:color 0.3s}
+.qcsr.active{color:#fff}
+.qcsr.done{color:#2a2a2a}
+.qcsr-line{width:22px;height:1px;background:#1a1a1a}
+
+/* ============ CONNECTIONS ============ */
+.conn-sec{padding:100px 48px;border-top:1px solid #1a1a1a}
+.conn-sec-inner{max-width:1080px;margin:0 auto;text-align:center}
+.conn-header{margin-bottom:52px}
+.conn-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;max-width:680px;margin:0 auto}
+.conn-tile{
+  background:#0a0a0a;border:1px solid #1a1a1a;border-radius:14px;padding:18px 12px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  opacity:0;transform:scale(0.9);
+  transition:opacity 0.45s ease,transform 0.45s ease,border-color 0.2s;
+}
+.conn-tile.vis{opacity:1;transform:scale(1)}
+.conn-tile:hover{border-color:#2a2a2a}
+.conn-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0}
+.conn-name{font-size:10px;color:#444;font-weight:500;text-align:center}
+.conn-more{font-size:11px;color:#2a2a2a;margin-top:16px}
+
+/* ============ MARKETPLACE ============ */
+.mkt-sec{padding:100px 48px;border-top:1px solid #1a1a1a}
+.mkt-sec-inner{max-width:1080px;margin:0 auto}
+.mkt-header{margin-bottom:40px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.mkt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.acard{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:12px;overflow:hidden;opacity:0;transform:scale(0.94) translateY(14px);transition:opacity 0.5s ease,transform 0.5s ease,border-color 0.2s,box-shadow 0.2s}
+.acard.vis{opacity:1;transform:scale(1) translateY(0)}
+.acard:hover{border-color:#252525;box-shadow:0 12px 36px rgba(0,0,0,0.6)}
+.at{position:relative;height:120px;overflow:hidden}
+.at .wm{position:absolute;right:-10px;bottom:-10px;opacity:0.07}
+.atm{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between}
+.ctag{font-size:9px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(0,0,0,0.55);color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.05em}
+.ptag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(0,0,0,0.55);color:rgba(255,255,255,0.7)}
+.ab{padding:11px 13px}
+.at-title{font-size:12px;font-weight:700;margin-bottom:3px}
+.at-desc{font-size:10px;color:#555;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:9px}
+.af{display:flex;align-items:center;justify-content:space-between}
+.ac{display:flex;align-items:center;gap:5px}
+.ac img{width:15px;height:15px;border-radius:50%;object-fit:cover;opacity:0.6}
+.ac span{font-size:10px;color:#444}
+.stars{color:#f0c040;font-size:9px;letter-spacing:.5px}
+.addbtn{width:28px;height:28px;border-radius:50%;border:1.5px solid #222;background:transparent;color:#666;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color 0.15s,color 0.15s,transform 0.1s;flex-shrink:0}
+.addbtn:hover{border-color:#fff;color:#fff;transform:scale(1.1)}
+.addbtn.added{border-color:#3a7a4a;color:#4cd97a}
+
+/* ============ CREATOR ============ */
+.creator-sec{padding:100px 48px;border-top:1px solid #1a1a1a}
+.creator-inner-new{max-width:820px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:48px;text-align:center}
+.creator-top h2{margin-top:10px;line-height:1.05}
+.creator-top .sec-sub{margin:12px auto 0}
+.creator-steps{display:flex;align-items:flex-start;width:100%;gap:0}
+.cr-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;padding:0 10px}
+.cr-step-ico{width:44px;height:44px;border-radius:11px;background:#0a0a0a;border:1px solid #1a1a1a;display:flex;align-items:center;justify-content:center;color:#444}
+.cr-step-label{font-size:13px;font-weight:700;color:#fff}
+.cr-step-desc{font-size:11px;color:#555;line-height:1.65;text-align:center}
+.cr-step-arrow{flex-shrink:0;color:#1a1a1a;font-size:14px;padding-top:15px}
+.cr-earn-card{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:14px;padding:20px 24px;width:100%;max-width:500px}
+.cr-earn-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.cr-earn-agt{display:flex;align-items:center;gap:10px}
+.cr-earn-dot{width:7px;height:7px;border-radius:50%;background:#4cd97a;animation:pdot 2s infinite;flex-shrink:0}
+.cr-earn-name{font-size:12px;font-weight:700}
+.cr-earn-by{font-size:10px;color:#333;margin-top:2px}
+.cr-earn-rating{font-size:11px;color:#f0c040}
+.cr-earn-nums{display:flex;align-items:center;gap:20px}
+.cr-earn-num{text-align:right}
+.cr-earn-val{font-size:20px;font-weight:800;letter-spacing:-0.04em;display:block}
+.cr-earn-lbl{font-size:9px;color:#333;text-transform:uppercase;letter-spacing:0.06em}
+.cr-earn-divider{width:1px;height:30px;background:#1a1a1a}
+.cr-earn-green{color:#4cd97a}
+
+/* ============ STATS ============ */
+.stats-sec{padding:110px 48px;border-top:1px solid #1a1a1a;text-align:center}
+.stats-inner{max-width:900px;margin:0 auto}
+.stats-lbl{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#252525;margin-bottom:56px}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.si{padding:32px 16px;border-right:1px solid #111;opacity:0;transform:translateY(12px);transition:opacity 0.6s ease,transform 0.6s ease}
+.si:last-child{border-right:none}
+.si.vis{opacity:1;transform:translateY(0)}
+.sn{font-size:clamp(36px,5vw,56px);font-weight:800;letter-spacing:-0.055em;line-height:1;display:block}
+.sl{font-size:11px;color:#2a2a2a;margin-top:7px;letter-spacing:0.04em}
+
+/* ============ TESTIMONIALS ============ */
+.ti-sec{padding:100px 48px;border-top:1px solid #1a1a1a}
+.ti-inner{max-width:1080px;margin:0 auto}
+.ti-hdr{margin-bottom:44px}
+.ti-hdr h2{font-size:clamp(26px,3.5vw,40px);font-weight:800;letter-spacing:-0.04em}
+.ti-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ti{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:14px;padding:24px;opacity:0;transform:translateY(18px);transition:opacity 0.55s ease,transform 0.55s ease,border-color 0.2s}
+.ti.vis{opacity:1;transform:translateY(0)}
+.ti:hover{border-color:#222}
+.ti p{font-size:13px;color:#666;line-height:1.75;margin-bottom:20px}
+.ta{display:flex;align-items:center;gap:10px}
+.ta-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:rgba(255,255,255,0.5);flex-shrink:0}
+.ta-name{font-size:12px;font-weight:600}
+.ta-role{font-size:10px;color:#333;margin-top:2px}
+
+/* ============ CTA ============ */
+.cta-sec{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:100px 24px;border-top:1px solid #1a1a1a;position:relative;overflow:hidden}
+#cta-canvas{position:absolute;inset:0;opacity:0.3}
+.cta-in{position:relative;z-index:2;max-width:580px}
+.cta-eye{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.22);padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,0.07);margin-bottom:22px}
+.cta-sec h2{font-size:clamp(36px,6vw,70px);font-weight:800;letter-spacing:-0.055em;line-height:1.0;margin-bottom:16px;text-wrap:balance}
+.cta-sec p{font-size:14px;color:#444;line-height:1.7;margin-bottom:34px}
+.cta-form{display:flex;gap:8px;max-width:390px;margin:0 auto 14px}
+.cta-form input{flex:1;padding:12px 15px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);color:#fff;font-size:13px;font-family:inherit;outline:none;transition:border-color 0.15s}
+.cta-form input:focus{border-color:rgba(255,255,255,0.22)}
+.cta-form input::placeholder{color:rgba(255,255,255,0.16)}
+.cta-form button{padding:12px 20px;border-radius:10px;background:#fff;color:#000;border:none;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background 0.15s,transform 0.1s}
+.cta-form button:hover{background:#e8e8e8;transform:translateY(-1px)}
+.cta-fine{font-size:11px;color:#222}
+
+/* ============ FOOTER ============ */
+footer{padding:28px 48px;border-top:1px solid #1a1a1a;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.fl{display:flex;align-items:center;gap:8px}
+.fl img{width:17px;height:17px;object-fit:contain}
+.fl span{font-size:11px;font-weight:800;letter-spacing:0.08em}
+.cp{font-size:11px;color:#1a1a1a}
+.flinks{display:flex;gap:20px}
+.flinks a{font-size:11px;color:#1a1a1a;text-decoration:none;transition:color 0.15s}
+.flinks a:hover{color:#555}
+
+/* ============ REVEAL HELPERS ============ */
+.rev{opacity:0;transform:translateY(18px);transition:opacity 0.55s ease,transform 0.55s ease}
+.rev.vis{opacity:1;transform:translateY(0)}
+
+/* ============ KEYFRAMES ============ */
+@keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pdot{0%,100%{opacity:1}50%{opacity:0.2}}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:780px){
+  nav{padding:0 20px}.nlinks{display:none}
+  .creator-sec{padding:64px 20px}
+  .creator-steps{flex-direction:column;align-items:center;gap:20px}
+  .cr-step-arrow{transform:rotate(90deg)}
+  .conn-sec,.mkt-sec,.ti-sec,.stats-sec{padding:64px 20px}
+  .mkt-grid,.ti-grid{grid-template-columns:1fr}
+  .conn-grid{grid-template-columns:repeat(5,1fr)}
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+  footer{flex-direction:column;align-items:flex-start;padding:24px 20px}
+}
+</style>
+</head>
+<body>
+
+<div id="spb"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nl">
+    <img src="Noctus_logo.png" alt="" onerror="this.style.display='none'">
+    <span>NOCTUS</span>
+  </div>
+  <div class="nlinks">
+    <a href="#prompt-sec">Platform</a>
+    <a href="#mkt-sec">Agents</a>
+    <a href="#cta-sec">Early Access</a>
+  </div>
+  <button class="ncta" onclick="document.querySelector('.cta-sec').scrollIntoView({behavior:'smooth'})">Join Waitlist</button>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-c">
+    <div class="hero-logo">
+      <img src="Noctus_logo.png" alt="Noctus" style="width:68px;height:68px" onerror="this.parentElement.style.gap='0'">
+      <span class="hero-logo-name">NOCTUS</span>
+    </div>
+    <h1>
+      <span class="hl">Plug in.</span>
+      <span class="hl">Step back.</span>
+      <span class="hl">Let AI run it.</span>
+    </h1>
+    <p class="hero-sub">Pre-built AI agents for every corner of your business — email, leads, reviews, support, payments, and more. Active in 5 minutes. No code.</p>
+    <div class="hero-form" id="hero-form">
+      <input type="email" id="hero-email" placeholder="your@email.com">
+      <button onclick="joinWaitlist('hero')">Get early access →</button>
+    </div>
+    <div class="hero-soc">
+      <div class="havs"><span>AK</span><span>MF</span><span>TR</span><span>JD</span><span style="font-size:8px">+</span></div>
+      &nbsp;2,400+ founders already on the waitlist
+    </div>
+    <div class="scroll-ind" style="position:relative;left:auto;transform:none;margin-top:28px">
+      <span>Scroll</span>
+      <div class="scroll-ind-l"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PAIN — line by line reveal (260vh) ===== -->
+<div id="pain-wrap" style="height:260vh">
+  <div class="pain-sticky">
+    <div class="pain-block">
+      <span class="pain-line">Your best leads go cold</span>
+      <span class="pain-line">while you're in meetings.</span>
+      <span class="pain-line" style="margin-top:0.5em">Your team spends half the week</span>
+      <span class="pain-line">on tasks that don't need them.</span>
+      <span class="pain-line impact">Noctus changes that.</span>
+    </div>
+  </div>
+</div>
+
+<div class="tdiv"></div>
+
+<!-- ===== NODE BUILDER — scroll-driven (580vh) ===== -->
+<div id="node-wrap" style="height:580vh">
+  <div class="node-sticky">
+    <p class="node-hed" id="node-hed">One agent. Two paths. Built in seconds.</p>
+    <p class="node-sub-lbl" id="node-sub-lbl">Scroll to build it live — then watch how easy it is to edit.</p>
+    <div id="ncw">
+      <!-- Title bar -->
+      <div class="ntb">
+        <div class="ntd" style="background:#f06060"></div>
+        <div class="ntd" style="background:#f0c040;margin-left:4px"></div>
+        <div class="ntd" style="background:#4cd97a;margin-left:4px"></div>
+        <span class="ntbt" id="ncw-title">Node Editor</span>
+        <span id="nlive">Live</span>
+      </div>
+      <!-- Canvas area -->
+      <div id="nc">
+        <!-- Agent label -->
+        <div class="nc-lbl" id="lbl-a" style="left:81px;top:14px">Review Response Agent</div>
+
+        <!-- NODE A: Trigger -->
+        <div class="n-box n-trigger" id="n-a" style="left:16px;top:108px">
+          <div class="n-head">
+            <div class="n-badge" style="background:#28608840;color:#60a0f0">Trigger</div>
+            <div class="n-label">Review<br>Posted</div>
+          </div>
+          <div class="n-foot" style="border-top:1px solid #28608820">
+            <span class="n-test" style="background:#28608830;color:#60a0f0">▶ Test</span>
+          </div>
+        </div>
+
+        <!-- NODE B: AI -->
+        <div class="n-box n-ai" id="n-b" style="left:202px;top:108px">
+          <div class="n-head">
+            <div class="n-badge" style="background:#7040b040;color:#a070e0">AI</div>
+            <div class="n-label" id="n-b-label">Read &amp;<br>Score Review</div>
+          </div>
+          <div class="n-foot" style="border-top:1px solid #7040b020">
+            <span class="n-test" style="background:#7040b030;color:#a070e0">▶ Test</span>
+          </div>
+        </div>
+
+        <!-- NODE C: Branch/Decision -->
+        <div class="n-box n-branch" id="n-c" style="left:388px;top:108px">
+          <div class="n-head">
+            <div class="n-badge" style="background:#80603040;color:#d0a040">Branch</div>
+            <div class="n-label">Score<br>≥ 4 Stars?</div>
+          </div>
+          <div class="n-foot" style="border-top:1px solid #80603020">
+            <span class="n-test" style="background:#80603030;color:#d0a040">▶ Test</span>
+          </div>
+        </div>
+
+        <!-- NODE D: YES branch (upper) -->
+        <div class="n-box n-action" id="n-d" style="left:568px;top:30px">
+          <div class="n-head">
+            <div class="n-badge" style="background:#20705040;color:#40b080">Action</div>
+            <div class="n-label">Reply:<br>Thank You</div>
+          </div>
+          <div class="n-foot" style="border-top:1px solid #20705020">
+            <span class="n-test" style="background:#20705030;color:#40b080">▶ Test</span>
+          </div>
+        </div>
+
+        <!-- NODE E: NO branch (lower) -->
+        <div class="n-box n-trigger" id="n-e" style="left:568px;top:186px">
+          <div class="n-head">
+            <div class="n-badge" style="background:#28608840;color:#60a0f0">Action</div>
+            <div class="n-label">Alert<br>Slack Team</div>
+          </div>
+          <div class="n-foot" style="border-top:1px solid #28608820">
+            <span class="n-test" style="background:#28608830;color:#60a0f0">▶ Test</span>
+          </div>
+        </div>
+
+        <!-- Edit cursor (appears for editing demo) -->
+        <div id="n-edit-csr" style="position:absolute;pointer-events:none;z-index:10;opacity:0;left:0;top:0">
+          <svg width="14" height="20" viewBox="0 0 14 20"><path d="M1,1 L1,17 L4.5,13 L7.5,19 L9.5,18 L6.5,12 L11,12 Z" fill="white" stroke="rgba(0,0,0,0.6)" stroke-width="0.8" stroke-linejoin="round"/></svg>
+        </div>
+        <!-- Edit popover -->
+        <div id="n-edit-pop" style="position:absolute;z-index:11;opacity:0;pointer-events:none;background:#0d0d0d;border:1px solid #282828;border-radius:9px;padding:10px 12px;min-width:164px;box-shadow:0 10px 32px rgba(0,0,0,0.9);left:202px;top:196px">
+          <div style="font-size:8px;color:#2a2a2a;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px">Node Label</div>
+          <div id="n-edit-field" style="background:#000;border:1px solid #222;border-radius:5px;padding:5px 8px;font-size:11px;color:#888;min-height:22px;font-family:inherit"></div>
+          <div style="font-size:9px;color:#1a1a1a;margin-top:7px;display:flex;justify-content:flex-end;gap:6px">
+            <span id="n-edit-save" style="padding:3px 10px;border-radius:4px;background:#fff;color:#000;font-size:9px;font-weight:700;opacity:0;transition:opacity 0.2s">Save</span>
+          </div>
+        </div>
+
+        <!-- EDGE SVG -->
+        <svg>
+          <defs>
+            <marker id="arr" markerWidth="7" markerHeight="7" refX="6" refY="2.5" orient="auto">
+              <path d="M0,0 L0,5 L7,2.5 z" fill="#2a2a2a"/>
+            </marker>
+          </defs>
+          <!-- A→B -->
+          <path id="e-ab" d="M146,151 C172,151 178,151 202,151"
+            fill="none" stroke="#252525" stroke-width="1.4" marker-end="url(#arr)"
+            stroke-dasharray="60" stroke-dashoffset="60"/>
+          <!-- B→C -->
+          <path id="e-bc" d="M332,151 C358,151 364,151 388,151"
+            fill="none" stroke="#252525" stroke-width="1.4" marker-end="url(#arr)"
+            stroke-dasharray="60" stroke-dashoffset="60"/>
+          <!-- C→D (YES, upper) -->
+          <path id="e-cd" d="M518,151 C548,151 548,73 568,73"
+            fill="none" stroke="#20705080" stroke-width="1.4" marker-end="url(#arr)"
+            stroke-dasharray="135" stroke-dashoffset="135"/>
+          <!-- C→E (NO, lower) -->
+          <path id="e-ce" d="M518,151 C548,151 548,229 568,229"
+            fill="none" stroke="#25252580" stroke-width="1.4" marker-end="url(#arr)"
+            stroke-dasharray="135" stroke-dashoffset="135"/>
+          <!-- YES / NO labels -->
+          <text id="lbl-yes" x="541" y="100" font-size="8" fill="rgba(64,176,128,0)" font-weight="700" font-family="-apple-system,sans-serif" text-anchor="middle" transition="fill 0.3s">YES</text>
+          <text id="lbl-no" x="541" y="214" font-size="8" fill="rgba(255,255,255,0)" font-weight="700" font-family="-apple-system,sans-serif" text-anchor="middle">NO</text>
+        </div>
+
+      </div>
+      <!-- Status bar -->
+      <div id="nsbar">
+        <div id="nsdot"></div>
+        <span id="nstxt">Agent active</span>
+        <span id="nsdet">&nbsp;· Last run 14s ago · 5 nodes · 2 paths</span>
+        <div id="nsruns"><div class="rn">1,284</div><div class="rl">runs this month</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tdiv"></div>
+
+<!-- ===== QUICK CREATE — scroll-driven 450vh ===== -->
+<div id="qc-wrap" style="height:450vh">
+  <div class="qc-sticky">
+    <div class="qc-sec-hdr">
+      <div class="eyebrow">Quick Create</div>
+      <h2>Don't want to browse?<br>Just describe it.</h2>
+    </div>
+    <div id="qc-card">
+      <!-- Titlebar -->
+      <div class="ntb">
+        <div class="ntd" style="background:#f06060"></div>
+        <div class="ntd" style="background:#f0c040;margin-left:4px"></div>
+        <div class="ntd" style="background:#4cd97a;margin-left:4px"></div>
+        <span id="qc-tb-txt">Quick Create</span>
+        <span id="qc-live-badge">● LIVE</span>
+      </div>
+      <!-- Card body: all 4 states stacked -->
+      <div id="qc-body">
+        <!-- STATE 1: typing -->
+        <div id="qcs-type" class="qc-state">
+          <div style="font-size:9px;color:#2a2a2a;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">Describe your agent</div>
+          <div class="qc-ta-box"><span id="qc-typed-txt"></span><span class="qc-cursor" id="qc-csr"></span></div>
+          <div class="qc-chips-row">
+            <span class="qc-chip">📧 Email bot</span>
+            <span class="qc-chip">⭐ Reviews</span>
+            <span class="qc-chip">📅 Bookings</span>
+            <span class="qc-chip">🛒 Cart recovery</span>
+          </div>
+          <div class="qc-act-row">
+            <span style="font-size:10px;color:#1e1e1e">AI · 3 nodes · 2 connections</span>
+            <div id="qc-gen-btn" class="qc-gen-btn">Generate →</div>
+          </div>
+        </div>
+        <!-- STATE 2: loading -->
+        <div id="qcs-load" class="qc-state" style="opacity:0;pointer-events:none">
+          <div class="qc-load-inner">
+            <div class="qc-logo-loader">
+              <img src="Noctus_logo.png" id="qc-logo-spin" alt="Noctus" onerror="this.style.opacity='0'">
+            </div>
+            <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.6)">Building your agent...</div>
+            <div class="qc-load-bar-wrap"><div id="qc-load-bar"></div></div>
+            <div class="qc-phases">
+              <div class="qc-phase" id="qcp0"><span class="qp-dot">◯</span>Analyzing your prompt</div>
+              <div class="qc-phase" id="qcp1"><span class="qp-dot">◯</span>Selecting nodes</div>
+              <div class="qc-phase" id="qcp2"><span class="qp-dot">◯</span>Wiring 2 connections</div>
+              <div class="qc-phase" id="qcp3"><span class="qp-dot">◯</span>Assembling workflow</div>
+            </div>
+          </div>
+        </div>
+        <!-- STATE 3: mini node editor -->
+        <div id="qcs-node" class="qc-state" style="opacity:0;pointer-events:none;padding:14px 16px">
+          <div class="qc-node-hd">Support Agent · 3 nodes · 2 connections</div>
+          <div id="qc-nc">
+            <div class="n-box n-trigger" id="qcn-a" style="left:8px;top:18px;width:110px">
+              <div class="n-head" style="padding:6px 8px">
+                <div class="n-badge" style="background:#28608840;color:#60a0f0;font-size:8px">Trigger</div>
+                <div class="n-label" style="font-size:10px">Email<br>Received</div>
+              </div>
+            </div>
+            <div class="n-box n-ai" id="qcn-b" style="left:192px;top:18px;width:110px">
+              <div class="n-head" style="padding:6px 8px">
+                <div class="n-badge" style="background:#7040b040;color:#a070e0;font-size:8px">AI</div>
+                <div class="n-label" style="font-size:10px">Read &amp;<br>Respond</div>
+              </div>
+            </div>
+            <div class="n-box n-action" id="qcn-c" style="left:376px;top:18px;width:110px">
+              <div class="n-head" style="padding:6px 8px">
+                <div class="n-badge" style="background:#20705040;color:#40b080;font-size:8px">Action</div>
+                <div class="n-label" style="font-size:10px">Send<br>Reply</div>
+              </div>
+            </div>
+            <svg>
+              <defs><marker id="arr3" markerWidth="7" markerHeight="7" refX="6" refY="2.5" orient="auto"><path d="M0,0 L0,5 L7,2.5 z" fill="#2a2a2a"/></marker></defs>
+              <path id="qce-ab" d="M118,51 C148,51 165,51 192,51"
+                fill="none" stroke="#252525" stroke-width="1.4" marker-end="url(#arr3)"
+                stroke-dasharray="84" stroke-dashoffset="84"/>
+              <path id="qce-bc" d="M302,51 C332,51 349,51 376,51"
+                fill="none" stroke="#252525" stroke-width="1.4" marker-end="url(#arr3)"
+                stroke-dasharray="84" stroke-dashoffset="84"/>
+            </svg>
+          </div>
+        </div>
+        <!-- STATE 4: done overlay (sits on top of nodes) -->
+        <div id="qcs-done" class="qc-state" style="opacity:0;pointer-events:none;background:rgba(0,0,0,0.86);backdrop-filter:blur(6px)">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+            <div style="width:46px;height:46px;border-radius:50%;background:rgba(76,217,122,0.1);border:1.5px solid rgba(76,217,122,0.3);display:flex;align-items:center;justify-content:center">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4cd97a" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <div style="font-size:15px;font-weight:700;color:#fff">Agent is live.</div>
+            <div style="font-size:10px;color:#444">3 nodes · 2 connections · $0.04 per run</div>
+            <div style="padding:8px 20px;border-radius:8px;background:#fff;color:#000;font-size:11px;font-weight:700;cursor:pointer">View agent →</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Step progress dots -->
+    <div class="qc-steps-row">
+      <div class="qcsr active" id="qcsr0">Describe</div>
+      <div class="qcsr-line"></div>
+      <div class="qcsr" id="qcsr1">Build</div>
+      <div class="qcsr-line"></div>
+      <div class="qcsr" id="qcsr2">Review</div>
+      <div class="qcsr-line"></div>
+      <div class="qcsr" id="qcsr3">Activate</div>
+    </div>
+  </div>
+</div>
+
+<div class="tdiv"></div>
+
+<!-- ===== CONNECTIONS ===== -->
+<section class="conn-sec" id="conn-sec">
+  <div class="conn-sec-inner">
+    <div class="conn-header">
+      <div class="eyebrow rev">Integrations</div>
+      <h2 class="sec-h2 rev" style="text-align:center">Your tools, already wired in.</h2>
+      <p class="sec-sub rev" style="text-align:center;margin:10px auto 0">No manual mapping. Every agent template comes pre-configured for your stack.</p>
+    </div>
+    <div class="conn-grid">
+      <div class="conn-tile" data-d="0"><div class="conn-icon" style="background:#EA4335"><img src="icons/gmail.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="Gmail"></div><div class="conn-name">Gmail</div></div>
+      <div class="conn-tile" data-d="60"><div class="conn-icon" style="background:#4285F4"><img src="icons/googlecalendar.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="Google Calendar"></div><div class="conn-name">Google Cal</div></div>
+      <div class="conn-tile" data-d="120"><div class="conn-icon" style="background:#FF7A59"><img src="icons/hubspot.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="HubSpot"></div><div class="conn-name">HubSpot</div></div>
+      <div class="conn-tile" data-d="180"><div class="conn-icon" style="background:#0052CC"><img src="icons/jira.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="Jira"></div><div class="conn-name">Jira</div></div>
+      <div class="conn-tile" data-d="240"><div class="conn-icon" style="background:#2CA01C"><img src="icons/quickbooks.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="QuickBooks"></div><div class="conn-name">QuickBooks</div></div>
+      <div class="conn-tile" data-d="60"><div class="conn-icon" style="background:#96BF48"><img src="icons/shopify.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="Shopify"></div><div class="conn-name">Shopify</div></div>
+      <div class="conn-tile" data-d="120"><div class="conn-icon" style="background:#635BFF"><img src="icons/stripe.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="Stripe"></div><div class="conn-name">Stripe</div></div>
+      <div class="conn-tile" data-d="180"><div class="conn-icon" style="background:#25D366"><img src="icons/whatsapp.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="WhatsApp"></div><div class="conn-name">WhatsApp</div></div>
+      <div class="conn-tile" data-d="240"><div class="conn-icon" style="background:#13B5EA"><img src="icons/xero.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="Xero"></div><div class="conn-name">Xero</div></div>
+      <div class="conn-tile" data-d="300"><div class="conn-icon" style="background:#FF4A00"><img src="icons/zapier.svg" width="20" height="20" style="filter:brightness(0) invert(1)" alt="Zapier"></div><div class="conn-name">Zapier</div></div>
+    </div>
+    <p class="conn-more rev">+ more added every sprint. Request yours.</p>
+  </div>
+</section>
+
+<div class="tdiv"></div>
+
+<!-- ===== MARKETPLACE ===== -->
+<section class="mkt-sec" id="mkt-sec">
+  <div class="mkt-sec-inner">
+    <div class="mkt-header">
+      <div>
+        <div class="eyebrow">Marketplace</div>
+        <h2 class="sec-h2">Pick one. It runs itself.</h2>
+      </div>
+      <p style="font-size:12px;color:#222;max-width:180px;line-height:1.6">15 at launch. New agents added weekly.</p>
+    </div>
+    <div class="mkt-grid">
+      <!-- 1 -->
+      <div class="acard" data-d="0">
+        <div class="at" style="background:linear-gradient(135deg,#101828,#203050)">
+          <svg class="wm" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="0.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <div class="atm"><span class="ctag">Operations</span><span class="ptag">$0.04<span style="font-size:8px;opacity:0.5">/run</span></span></div>
+        </div>
+        <div class="ab">
+          <div class="at-title">Email Auto-Responder</div>
+          <div class="at-desc">Reads all inbound email, categorizes by intent, drafts AI replies, and sends — zero lag, 24/7.</div>
+          <div class="af"><div class="ac"><img src="Noctus_logo.png" onerror="this.style.display='none'"><span>Noctus</span><span style="color:#1a1a1a">·</span><span class="stars">★★★★★</span></div><button class="addbtn" onclick="addA(this)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        </div>
+      </div>
+      <!-- 2 -->
+      <div class="acard" data-d="80">
+        <div class="at" style="background:linear-gradient(135deg,#280818,#601848)">
+          <svg class="wm" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="0.8"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+          <div class="atm"><span class="ctag">Marketing</span><span class="ptag">$0.06<span style="font-size:8px;opacity:0.5">/run</span></span></div>
+        </div>
+        <div class="ab">
+          <div class="at-title">Social Media Manager</div>
+          <div class="at-desc">Schedules posts, replies to comments and DMs across Instagram, X, and LinkedIn — all on autopilot.</div>
+          <div class="af"><div class="ac"><img src="Noctus_logo.png" onerror="this.style.display='none'"><span>Noctus</span><span style="color:#1a1a1a">·</span><span class="stars">★★★★½</span></div><button class="addbtn" onclick="addA(this)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        </div>
+      </div>
+      <!-- 3 -->
+      <div class="acard" data-d="160">
+        <div class="at" style="background:linear-gradient(135deg,#0a1e28,#184050)">
+          <svg class="wm" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="0.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          <div class="atm"><span class="ctag">Support</span><span class="ptag">$0.07<span style="font-size:8px;opacity:0.5">/run</span></span></div>
+        </div>
+        <div class="ab">
+          <div class="at-title">Customer Support Bot</div>
+          <div class="at-desc">Resolves tier-1 tickets, answers FAQs instantly, escalates complex issues to your team. 92% resolution rate.</div>
+          <div class="af"><div class="ac"><img src="Noctus_logo.png" onerror="this.style.display='none'"><span>Noctus</span><span style="color:#1a1a1a">·</span><span class="stars">★★★★★</span></div><button class="addbtn" onclick="addA(this)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        </div>
+      </div>
+      <!-- 4 -->
+      <div class="acard" data-d="0">
+        <div class="at" style="background:linear-gradient(135deg,#1e1a08,#404010)">
+          <svg class="wm" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="0.8"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          <div class="atm"><span class="ctag">Finance</span><span class="ptag">$0.05<span style="font-size:8px;opacity:0.5">/run</span></span></div>
+        </div>
+        <div class="ab">
+          <div class="at-title">Invoice &amp; Payment Chaser</div>
+          <div class="at-desc">Sends invoices, follows up on late payments with AI-written emails, and syncs with QuickBooks.</div>
+          <div class="af"><div class="ac"><img src="Noctus_logo.png" onerror="this.style.display='none'"><span>Noctus</span><span style="color:#1a1a1a">·</span><span class="stars">★★★★½</span></div><button class="addbtn" onclick="addA(this)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        </div>
+      </div>
+      <!-- 5 -->
+      <div class="acard" data-d="80">
+        <div class="at" style="background:linear-gradient(135deg,#0b1f40,#1a407a)">
+          <svg class="wm" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="0.8"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <div class="atm"><span class="ctag">Sales</span><span class="ptag">$0.04<span style="font-size:8px;opacity:0.5">/run</span></span></div>
+        </div>
+        <div class="ab">
+          <div class="at-title">Appointment Booking Bot</div>
+          <div class="at-desc">Books demos via email thread, syncs to Google Calendar, sends reminders, handles rescheduling.</div>
+          <div class="af"><div class="ac"><img src="Noctus_logo.png" onerror="this.style.display='none'"><span>Noctus</span><span style="color:#1a1a1a">·</span><span class="stars">★★★★★</span></div><button class="addbtn" onclick="addA(this)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        </div>
+      </div>
+      <!-- 6 -->
+      <div class="acard" data-d="160">
+        <div class="at" style="background:linear-gradient(135deg,#281e08,#564010)">
+          <svg class="wm" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="0.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <div class="atm"><span class="ctag">Reputation</span><span class="ptag">$0.04<span style="font-size:8px;opacity:0.5">/run</span></span></div>
+        </div>
+        <div class="ab">
+          <div class="at-title">Brand Reputation Guard</div>
+          <div class="at-desc">Monitors all reviews across Google, Yelp, TripAdvisor. Responds within 30 minutes. Tracks sentiment trends.</div>
+          <div class="af"><div class="ac"><img src="Noctus_logo.png" onerror="this.style.display='none'"><span>Noctus</span><span style="color:#1a1a1a">·</span><span class="stars">★★★★½</span></div><button class="addbtn" onclick="addA(this)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        </div>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:11px;color:#1e1e1e;margin-top:18px">+ 9 more at launch: Cart Recovery, Lead Nurture Sequence, HR Onboarding, Inventory Alert, Weekly Reports, Social Listener, and more.</p>
+  </div>
+</section>
+
+<div class="tdiv"></div>
+
+<!-- ===== CREATOR ===== -->
+<section class="creator-sec">
+  <div class="creator-inner-new">
+    <div class="creator-top rev">
+      <div class="eyebrow">Creator Program</div>
+      <h2 class="sec-h2">Build once.<br>Earn every run.</h2>
+      <p class="sec-sub">Publish your expertise as an agent. No support needed. Passive income every time it runs.</p>
+    </div>
+    <div class="creator-steps">
+      <div class="cr-step rev" data-d="0">
+        <div class="cr-step-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="5" cy="12" r="3"/><circle cx="19" cy="5" r="3"/><circle cx="19" cy="19" r="3"/><line x1="8" y1="11.5" x2="16" y2="6.5"/><line x1="8" y1="12.5" x2="16" y2="17.5"/></svg></div>
+        <div class="cr-step-label">Build</div>
+        <div class="cr-step-desc">Use Quick Create or the node editor. Configure it with your expertise.</div>
+      </div>
+      <div class="cr-step-arrow rev" data-d="110" style="padding-top:13px">→</div>
+      <div class="cr-step rev" data-d="160">
+        <div class="cr-step-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+        <div class="cr-step-label">Publish</div>
+        <div class="cr-step-desc">Set your price. Live in the marketplace — visible to thousands instantly.</div>
+      </div>
+      <div class="cr-step-arrow rev" data-d="280" style="padding-top:13px">→</div>
+      <div class="cr-step rev" data-d="330">
+        <div class="cr-step-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+        <div class="cr-step-label">Earn</div>
+        <div class="cr-step-desc">Every run deposits into your account. You built it once — it earns forever.</div>
+      </div>
+    </div>
+    <div class="cr-earn-card rev" data-d="140">
+      <div class="cr-earn-row">
+        <div class="cr-earn-agt">
+          <div class="cr-earn-dot"></div>
+          <div>
+            <div class="cr-earn-name">Email Auto-Responder Pro</div>
+            <div class="cr-earn-by">by you · $0.05/run</div>
+          </div>
+          <div class="cr-earn-rating">★ 4.9</div>
+        </div>
+        <div class="cr-earn-nums">
+          <div class="cr-earn-num">
+            <span class="cr-earn-val" id="cr-runs">0</span>
+            <div class="cr-earn-lbl">runs</div>
+          </div>
+          <div class="cr-earn-divider"></div>
+          <div class="cr-earn-num">
+            <span class="cr-earn-val cr-earn-green">$<span id="cr-earn">0</span></span>
+            <div class="cr-earn-lbl">this month</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="tdiv"></div>
+
+<!-- ===== STATS ===== -->
+<section class="stats-sec">
+  <div class="stats-inner">
+    <div class="stats-lbl">By the numbers</div>
+    <div class="stat-grid">
+      <div class="si" data-target="2400" data-suffix="+" data-d="0"><span class="sn" id="sn0">0</span><div class="sl">founders waiting</div></div>
+      <div class="si" data-target="96.4" data-suffix="%" data-dec="1" data-d="80"><span class="sn" id="sn1">0%</span><div class="sl">avg success rate</div></div>
+      <div class="si" data-target="15408" data-prefix="$" data-fmt="1" data-d="160"><span class="sn" id="sn2">$0</span><div class="sl">avg revenue influenced</div></div>
+      <div class="si" data-target="5" data-suffix="min" data-d="240"><span class="sn" id="sn3">0min</span><div class="sl">to first live agent</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="tdiv"></div>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="ti-sec">
+  <div class="ti-inner">
+    <div class="ti-hdr">
+      <div class="eyebrow rev">Early access</div>
+      <h2 class="rev">Founders who got in early<br>aren't looking back.</h2>
+    </div>
+    <div class="ti-grid">
+      <div class="ti" data-d="0">
+        <p>"Recovered $4,200 in abandoned carts the first month. The AI-generated emails don't feel automated — customers actually reply to them."</p>
+        <div class="ta"><div class="ta-av" style="background:linear-gradient(135deg,#180828,#381860)">NR</div><div><div class="ta-name">Nicole R.</div><div class="ta-role">Founder, DTC brand</div></div></div>
+      </div>
+      <div class="ti" data-d="110">
+        <p>"Churn dropped 22% in 60 days. The agent reaches customers before they've decided to leave — that timing is everything."</p>
+        <div class="ta"><div class="ta-av" style="background:linear-gradient(135deg,#0b1f40,#1a407a)">MF</div><div><div class="ta-name">Mia F.</div><div class="ta-role">CEO, SaaS startup</div></div></div>
+      </div>
+      <div class="ti" data-d="220">
+        <p>"Lead response went from 4 hours to 4 minutes. Close rate jumped 30% in one quarter. I don't even think about email anymore."</p>
+        <div class="ta"><div class="ta-av" style="background:linear-gradient(135deg,#0a2818,#185030)">AK</div><div><div class="ta-name">Alex K.</div><div class="ta-role">VP Sales, B2B SaaS</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta-sec" id="cta-sec">
+  <canvas id="cta-canvas"></canvas>
+  <div class="cta-in">
+    <div class="cta-eye">Early access · First 500 only</div>
+    <h2>Your business,<br>running itself.</h2>
+    <p>Join the waitlist. First 500 get 3 months free on Pro at launch — no credit card required.</p>
+    <div class="cta-form" id="cta-form">
+      <input type="email" id="cta-email" placeholder="your@email.com">
+      <button onclick="joinWaitlist('cta')">Secure my spot →</button>
+    </div>
+    <p class="cta-fine">No spam. One email when we launch. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="fl"><img src="Noctus_logo.png" alt="" onerror="this.style.display='none'"><span>NOCTUS</span></div>
+  <span class="cp">© 2026 Noctus. All rights reserved.</span>
+  <div class="flinks"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a></div>
+</footer>
+
+<script>
+// ============================================================
+// UTILS
+// ============================================================
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const easeOut3=t=>1-Math.pow(1-t,3);
+const easeSpring=t=>{if(t===0||t===1)return t;return Math.pow(2,-10*t)*Math.sin((t*10-0.75)*(2*Math.PI/3))+1};
+const p01=(p,a,b)=>clamp((p-a)/(b-a),0,1);
+
+// ============================================================
+// SCROLL BAR + NAV
+// ============================================================
+const spb=document.getElementById('spb');
+const nav=document.getElementById('nav');
+function updateTop(){
+  const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  spb.style.width=pct+'%';
+  nav.classList.toggle('scrolled',window.scrollY>50);
+  nav.classList.toggle('past-hero',window.scrollY>window.innerHeight*0.92);
+}
+
+// ============================================================
+// PARTICLE CANVAS
+// ============================================================
+function mkPar(id,opts={}){
+  const c=document.getElementById(id);if(!c)return;
+  const ctx=c.getContext('2d');
+  const{dens=13000,spd=0.15,dist=112,op=0.18}=opts;
+  let W,H,pts=[];
+  const resize=()=>{W=c.width=c.offsetWidth;H=c.height=c.offsetHeight};
+  const init=()=>{pts=[];for(let i=0;i<Math.floor(W*H/dens);i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*spd,vy:(Math.random()-.5)*spd,r:Math.random()*.9+.3})};
+  resize();init();window.addEventListener('resize',()=>{resize();init()});
+  const draw=()=>{
+    ctx.clearRect(0,0,W,H);
+    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<dist){ctx.beginPath();ctx.strokeStyle=`rgba(255,255,255,${.045*(1-d/dist)})`;ctx.lineWidth=.5;ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke()}
+    }
+    pts.forEach(p=>{
+      ctx.beginPath();ctx.fillStyle=`rgba(255,255,255,${op})`;ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+    });
+    requestAnimationFrame(draw);
+  };
+  draw();
+}
+mkPar('hero-canvas');
+mkPar('cta-canvas',{dens:18000,spd:0.1,op:0.12});
+
+// ============================================================
+// PAIN SECTION — line by line
+// ============================================================
+const painLines=document.querySelectorAll('.pain-line');
+const totalPain=painLines.length;
+
+// ============================================================
+// NODE SECTION REFS
+// ============================================================
+const nodeHed=document.getElementById('node-hed');
+const nodeSubLbl=document.getElementById('node-sub-lbl');
+const nlive=document.getElementById('nlive');
+const nsbar=document.getElementById('nsbar');
+const nNodes={
+  a:document.getElementById('n-a'),b:document.getElementById('n-b'),c:document.getElementById('n-c'),
+  d:document.getElementById('n-d'),e:document.getElementById('n-e'),
+};
+const nEdges={
+  ab:document.getElementById('e-ab'),bc:document.getElementById('e-bc'),
+  cd:document.getElementById('e-cd'),ce:document.getElementById('e-ce'),
+};
+const lblA=document.getElementById('lbl-a');
+const lblYes=document.getElementById('lbl-yes');
+const lblNo=document.getElementById('lbl-no');
+const nEditCsr=document.getElementById('n-edit-csr');
+const nEditPop=document.getElementById('n-edit-pop');
+const nEditField=document.getElementById('n-edit-field');
+const nEditSave=document.getElementById('n-edit-save');
+const nBLabel=document.getElementById('n-b-label');
+const ncwTitle=document.getElementById('ncw-title');
+const editOldText='Read & Score Review';
+const editNewText='Analyze & Respond';
+
+function setNode(el,p){
+  if(!el)return;
+  const spr=easeSpring(clamp(p,0,1));
+  el.style.opacity=clamp(p*9,0,1);
+  el.style.transform=`scale(${lerp(0.62,1,spr)})`;
+}
+function setEdge(el,p){
+  if(!el)return;
+  const da=parseFloat(el.getAttribute('stroke-dasharray').split(' ')[0]);
+  el.setAttribute('stroke-dashoffset',da*(1-easeOut3(clamp(p,0,1))));
+}
+
+// CSS var for live ::before
+const ldSty=document.createElement('style');ldSty.textContent='#nlive::before{opacity:var(--ld,0)!important}';document.head.appendChild(ldSty);
+
+// ============================================================
+// SCROLL SECTION DRIVER
+// ============================================================
+const secs=[];
+function reg(id,fn){const el=document.getElementById(id);if(el)secs.push({el,fn})}
+function getP(el){const r=el.getBoundingClientRect();const range=el.offsetHeight-window.innerHeight;return range>0?clamp(-r.top/range,0,1):0}
+
+// PAIN DRIVER — first line delayed so it clears the hero
+reg('pain-wrap',p=>{
+  painLines.forEach((ln,i)=>{
+    const thresh=0.08+(i/(totalPain))*0.78;
+    ln.classList.toggle('lit',p>thresh);
+  });
+});
+
+// NODE DRIVER — branching agent + edit demo
+reg('node-wrap',p=>{
+  // Header fades in
+  if(nodeHed)nodeHed.style.color=`rgba(255,255,255,${easeOut3(p01(p,0,0.05))*0.8})`;
+  if(nodeSubLbl)nodeSubLbl.style.color=`rgba(255,255,255,${easeOut3(p01(p,0.02,0.07))*0.3})`;
+
+  // Agent label
+  if(lblA)lblA.style.color=`rgba(255,255,255,${easeOut3(p01(p,0.05,0.11))*0.28})`;
+
+  // Build sequence
+  setNode(nNodes.a, p01(p,0.08,0.17));
+  setEdge(nEdges.ab, p01(p,0.17,0.27));
+  setNode(nNodes.b, p01(p,0.25,0.35));
+  setEdge(nEdges.bc, p01(p,0.35,0.45));
+  setNode(nNodes.c, p01(p,0.43,0.53));
+
+  // Branch labels appear
+  const branchLabelP=easeOut3(p01(p,0.53,0.60));
+  if(lblYes)lblYes.setAttribute('fill',`rgba(64,176,128,${branchLabelP*0.55})`);
+  if(lblNo)lblNo.setAttribute('fill',`rgba(255,255,255,${branchLabelP*0.28})`);
+
+  // YES and NO paths draw simultaneously
+  setEdge(nEdges.cd, p01(p,0.54,0.67));
+  setEdge(nEdges.ce, p01(p,0.56,0.69));
+  setNode(nNodes.d, p01(p,0.65,0.75));
+  setNode(nNodes.e, p01(p,0.67,0.77));
+
+  // Status bar + live badge
+  const liveP=easeOut3(p01(p,0.79,0.87));
+  if(nlive)nlive.style.color=`rgba(76,217,122,${liveP})`;
+  document.documentElement.style.setProperty('--ld',liveP);
+  if(nsbar){nsbar.style.opacity=liveP;nsbar.style.transform=`translateY(${(1-liveP)*14}px)`;}
+
+  // ---- EDIT ANIMATION (p: 0.86 → 1.0) ----
+  const ep=p01(p,0.86,1.0); // 0→1 over the edit phase
+
+  // Cursor appears and glides to node B
+  if(nEditCsr){
+    const cursorVis=ep<0.88?easeOut3(p01(ep,0,0.14)):easeOut3(1-p01(ep,0.88,1.0));
+    nEditCsr.style.opacity=cursorVis;
+    const cx=lerp(16,218,easeOut3(p01(ep,0.04,0.28)));
+    const cy=lerp(30,110,easeOut3(p01(ep,0.04,0.28)));
+    nEditCsr.style.transform=`translate(${cx}px,${cy}px)`;
+  }
+
+  // Node B selection glow
+  if(nNodes.b){
+    const selOn=easeOut3(p01(ep,0.25,0.35));
+    const selOff=easeOut3(p01(ep,0.82,0.92));
+    const glow=Math.max(0,selOn-selOff);
+    nNodes.b.style.boxShadow=glow>0.04?`0 0 0 2px rgba(255,255,255,${glow*0.5}),0 0 14px rgba(255,255,255,${glow*0.07})`:'';
+  }
+
+  // Edit popover appears
+  if(nEditPop){
+    const popOn=easeOut3(p01(ep,0.30,0.42));
+    const popOff=easeOut3(p01(ep,0.83,0.93));
+    const popV=Math.max(0,popOn-popOff);
+    nEditPop.style.opacity=popV;
+    nEditPop.style.transform=`translateY(${(1-Math.max(0.001,popV))*8}px)`;
+  }
+
+  // Text editing in field: erase old then type new
+  if(nEditField){
+    const changeP=p01(ep,0.38,0.82);
+    if(changeP<=0){nEditField.textContent=editOldText;nEditField.style.color='#555';}
+    else if(changeP<0.48){
+      const rem=Math.ceil(editOldText.length*(1-changeP/0.48));
+      nEditField.textContent=editOldText.substring(0,rem)+(rem<editOldText.length?'▌':'');
+      nEditField.style.color='#555';
+    } else {
+      const typed=Math.floor(editNewText.length*((changeP-0.48)/0.52));
+      nEditField.textContent=editNewText.substring(0,typed)+(typed<editNewText.length?'▌':'');
+      nEditField.style.color='#eee';
+    }
+  }
+
+  // Save button appears once typing is done
+  if(nEditSave)nEditSave.style.opacity=easeOut3(p01(ep,0.80,0.86));
+
+  // Node B label updates after save
+  if(nBLabel&&ep>0.86)nBLabel.innerHTML='Analyze &amp;<br>Respond';
+
+  // Titlebar shows "Editing…" during edit phase
+  if(ncwTitle)ncwTitle.textContent=ep>0.10&&ep<0.85?'Editing Node...':'Node Editor';
+});
+
+// ============================================================
+// INTERSECTION OBSERVER
+// ============================================================
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const d=parseInt(e.target.dataset.d||0);
+    setTimeout(()=>e.target.classList.add('vis'),d);
+    io.unobserve(e.target);
+  });
+},{threshold:0.1});
+document.querySelectorAll('.acard,.conn-tile,.ti,.si,.rev').forEach(el=>io.observe(el));
+
+// STATS COUNTER
+const siEls=document.querySelectorAll('.si');
+const sio=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const el=e.target;
+    const idx=[...siEls].indexOf(el);
+    const valEl=document.getElementById('sn'+idx);
+    if(!valEl)return;
+    el.classList.add('vis');
+    const target=parseFloat(el.dataset.target);
+    const suffix=el.dataset.suffix||'';
+    const prefix=el.dataset.prefix||'';
+    const dec=parseInt(el.dataset.dec||0);
+    const fmt=el.dataset.fmt;
+    let st=null;const dur=1100;
+    const step=ts=>{
+      if(!st)st=ts;
+      const prog=Math.min((ts-st)/dur,1);
+      const e3=1-Math.pow(1-prog,3);
+      const v=target*e3;
+      valEl.textContent=prefix+(fmt?Math.round(v).toLocaleString():dec?v.toFixed(dec):Math.round(v))+suffix;
+      if(prog<1)requestAnimationFrame(step);
+    };
+    setTimeout(()=>requestAnimationFrame(step),parseInt(el.dataset.d||0));
+    sio.unobserve(el);
+  });
+},{threshold:0.25});
+siEls.forEach(el=>sio.observe(el));
+
+// ============================================================
+// QUICK CREATE SCROLL DRIVER
+// ============================================================
+const qcTypedTxt=document.getElementById('qc-typed-txt');
+const qcCsr=document.getElementById('qc-csr');
+const qcStLayers={type:document.getElementById('qcs-type'),load:document.getElementById('qcs-load'),node:document.getElementById('qcs-node'),done:document.getElementById('qcs-done')};
+const qcLoadBar=document.getElementById('qc-load-bar');
+const qcPhaseEls=[0,1,2,3].map(i=>document.getElementById('qcp'+i));
+const qcMinNodes=[document.getElementById('qcn-a'),document.getElementById('qcn-b'),document.getElementById('qcn-c')];
+const qcMinEdges=[document.getElementById('qce-ab'),document.getElementById('qce-bc')];
+const qcStepDots=[0,1,2,3].map(i=>document.getElementById('qcsr'+i));
+const qcLiveBadge=document.getElementById('qc-live-badge');
+const qcTbTxt=document.getElementById('qc-tb-txt');
+const qcGenBtn=document.getElementById('qc-gen-btn');
+const promptFull="Respond to all customer support emails within 2 minutes, resolve common FAQs automatically, and escalate anything complex to my team on Slack.";
+
+reg('qc-wrap',p=>{
+  // OPACITY for each state layer
+  const typeO=p<0.33?1:easeOut3(1-p01(p,0.33,0.41));
+  const loadO=easeOut3(p01(p,0.31,0.39))*(p<0.60?1:easeOut3(1-p01(p,0.60,0.67)));
+  const nodeO=easeOut3(p01(p,0.60,0.67));
+  const doneO=easeOut3(p01(p,0.91,0.97));
+  if(qcStLayers.type){qcStLayers.type.style.opacity=typeO;qcStLayers.type.style.pointerEvents=typeO>0.5?'auto':'none';}
+  if(qcStLayers.load){qcStLayers.load.style.opacity=loadO;qcStLayers.load.style.pointerEvents='none';}
+  if(qcStLayers.node){qcStLayers.node.style.opacity=nodeO;qcStLayers.node.style.pointerEvents='none';}
+  if(qcStLayers.done){qcStLayers.done.style.opacity=doneO;qcStLayers.done.style.pointerEvents=doneO>0.5?'auto':'none';}
+
+  // Titlebar text
+  if(qcTbTxt)qcTbTxt.textContent=p<0.41?'Quick Create':p<0.67?'Building Agent...':'Node Editor';
+
+  // Live badge
+  if(qcLiveBadge)qcLiveBadge.style.color=`rgba(76,217,122,${doneO})`;
+
+  // Step dots
+  const stepIdx=p<0.33?0:p<0.62?1:p<0.91?2:3;
+  qcStepDots.forEach((d,i)=>{if(!d)return;d.classList.toggle('active',i===stepIdx);d.classList.toggle('done',i<stepIdx);});
+
+  // TYPING: 0.05→0.31
+  const typeP=p01(p,0.05,0.31);
+  const chars=Math.floor(promptFull.length*typeP);
+  if(qcTypedTxt)qcTypedTxt.textContent=promptFull.substring(0,chars);
+  if(qcCsr)qcCsr.style.opacity=(p>0.03&&p<0.33)?'1':'0';
+
+  // Generate button glow at end of typing
+  if(qcGenBtn){const gp=easeOut3(p01(p,0.27,0.33));qcGenBtn.style.background=`rgba(255,255,255,${gp})`;qcGenBtn.style.color=gp>0.5?'#000':'#333';qcGenBtn.style.borderColor=gp>0.5?'transparent':'#1a1a1a';}
+
+  // LOADING BAR: 0.33→0.61
+  const loadP=p01(p,0.33,0.61);
+  if(qcLoadBar)qcLoadBar.style.width=(easeOut3(loadP)*100)+'%';
+
+  // Loading phases
+  const ptimes=[0.08,0.32,0.57,0.82];
+  qcPhaseEls.forEach((ph,i)=>{
+    if(!ph)return;
+    const done=loadP>ptimes[i]+0.07;const act=loadP>ptimes[i]&&!done;
+    const dot=ph.querySelector('.qp-dot');
+    if(dot)dot.textContent=done?'✓':act?'◌':'◯';
+    ph.style.color=done?'#4cd97a':act?'rgba(255,255,255,0.7)':'#252525';
+  });
+
+  // MINI NODES: 0.62→0.90
+  const mP=p01(p,0.62,0.90);
+  setNode(qcMinNodes[0],p01(mP,0,0.28));
+  setEdge(qcMinEdges[0],p01(mP,0.26,0.52));
+  setNode(qcMinNodes[1],p01(mP,0.44,0.70));
+  setEdge(qcMinEdges[1],p01(mP,0.68,0.88));
+  setNode(qcMinNodes[2],p01(mP,0.80,1.0));
+});
+
+// ============================================================
+// CREATOR COUNTER
+// ============================================================
+const crRunsEl=document.getElementById('cr-runs');
+const crEarnEl=document.getElementById('cr-earn');
+const crCard=document.querySelector('.cr-earn-card');
+if(crCard){
+  const crIO=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting)return;
+      let st=null;
+      const run=ts=>{if(!st)st=ts;const prog=Math.min((ts-st)/1400,1);const e3=1-Math.pow(1-prog,3);if(crRunsEl)crRunsEl.textContent=Math.round(2847*e3).toLocaleString();if(crEarnEl)crEarnEl.textContent=Math.round(142*e3);if(prog<1)requestAnimationFrame(run);};
+      setTimeout(()=>requestAnimationFrame(run),200);
+      crIO.unobserve(e.target);
+    });
+  },{threshold:0.3});
+  crIO.observe(crCard);
+}
+
+// ============================================================
+// MAIN SCROLL HANDLER
+// ============================================================
+let raf=null;
+function onScroll(){
+  if(!raf){raf=requestAnimationFrame(()=>{
+    updateTop();
+    secs.forEach(({el,fn})=>fn(getP(el)));
+    raf=null;
+  })}
+}
+window.addEventListener('scroll',onScroll,{passive:true});
+window.addEventListener('resize',onScroll);
+onScroll();
+
+// ============================================================
+// WAITLIST — Supabase
+// ============================================================
+const SB_URL='https://ncqupzqygjfkmgodxbdk.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jcXVwenF5Z2pma21nb2R4YmRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3NzM3ODYsImV4cCI6MjEwMDM0OTc4Nn0.dMVDC2UJ8nDwbtEnjJdAwil4TQeuDsprMBEYsUlLgPw';
+
+function showSuccess(fid){
+  const form=document.getElementById(fid);
+  form.style.transition='opacity 0.2s,transform 0.2s';
+  form.style.opacity='0';form.style.transform='translateY(6px)';
+  setTimeout(()=>{
+    form.innerHTML=`<div style="padding:11px 18px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:9px">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4cd97a" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span style="font-size:13px;color:rgba(255,255,255,0.42)">You're on the list — we'll email you at launch.</span>
+    </div>`;
+    form.style.opacity='1';form.style.transform='translateY(0)';
+  },230);
+}
+
+function shakeInput(id){
+  const inp=document.getElementById(id);
+  inp.style.borderColor='rgba(240,80,80,0.5)';
+  inp.style.animation='shk .32s ease';
+  setTimeout(()=>{inp.style.borderColor='';inp.style.animation='';},600);
+}
+
+async function joinWaitlist(src){
+  const id=src==='hero'?'hero-email':'cta-email';
+  const fid=src==='hero'?'hero-form':'cta-form';
+  const email=document.getElementById(id).value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){shakeInput(id);return;}
+
+  // Optimistically show success then save
+  showSuccess(fid);
+
+  try{
+    await fetch(`${SB_URL}/rest/v1/waitlist`,{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'apikey':SB_KEY,
+        'Authorization':`Bearer ${SB_KEY}`,
+        'Prefer':'return=minimal'
+      },
+      body:JSON.stringify({email,source:src})
+    });
+  }catch(e){
+    // silent fail — user already sees success, log for debugging
+    console.warn('Waitlist save failed:',e);
+  }
+}
+function addA(btn){
+  btn.classList.add('added');
+  btn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>';
+}
+
+const ks=document.createElement('style');
+ks.textContent='@keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}';
+document.head.appendChild(ks);
+</script>
+</body>
+</html>
